@@ -1,0 +1,24 @@
+# ------------------------- 应用端口 -------------------------
+server:
+  port: 2100
+
+spring:
+  application:
+    name: spring-cloud-alibaba-nacos-producer
+  cloud:
+# -------------------------------- nacos地址 ---------------------------------
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos 服务注册中心地址
+      config:
+        server-addr: localhost:8848 # nacos 服务配置中心地址
+        file-extension: yaml
+# -------------------------------- nacos地址 ---------------------------------
+
+#--------------------------------- 客户端配置暴露监控端点 start ---------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#--------------------------------- 客户端配置暴露监控端点 end   ---------------------------------

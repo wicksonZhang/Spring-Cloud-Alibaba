@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Spring-Cloud-Alibaba</artifactId>
+        <groupId>cn.wickson.cloud.alibaba</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <description>Spring Cloud Alibaba Nacos Consumer</description>
+    <artifactId>02-spring-cloud-alibaba-nacos-consumer-2300</artifactId>
+
+    <dependencies>
+        <!-- 公共依赖 common -->
+        <dependency>
+            <groupId>cn.wickson.cloud.alibaba</groupId>
+            <artifactId>01-spring-cloud-alibaba-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Spring Cloud alibaba Nacos 注册与发现 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

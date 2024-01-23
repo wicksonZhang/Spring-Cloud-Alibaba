@@ -1,0 +1,18 @@
+# ------------------------- 应用端口 -------------------------
+server:
+  port: 2300
+
+spring:
+  application:
+    name: spring-cloud-alibaba-nacos-consumer
+  cloud:
+# -------------------------------- nacos地址 ---------------------------------
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos 服务注册中心地址
+# -------------------------------- nacos地址 ---------------------------------
+
+# ------------------------------- 服务提供者路由 -------------------------------
+service-url:
+  nacos-user-service: http://spring-cloud-alibaba-nacos-producer
+# ------------------------------- 服务提供者路由 -------------------------------
