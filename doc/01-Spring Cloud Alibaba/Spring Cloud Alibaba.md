@@ -33,9 +33,9 @@
 
 ## 项目初始化
 
+> **项目地址：**https://github.com/wicksonZhang/Spring-Cloud-Alibaba.git
+>
 > 我们的项目是从 `Spring Cloud` 体系中进行迁移出来的，所以大部分还是使用到了以前的公共模块和依赖。
-
-* **项目地址：**https://github.com/wicksonZhang/Spring-Cloud-Alibaba.git
 
 * **项目结构**
 
