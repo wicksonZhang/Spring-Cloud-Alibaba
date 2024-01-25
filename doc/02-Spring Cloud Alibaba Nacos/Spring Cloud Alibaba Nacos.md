@@ -413,7 +413,7 @@ Data ID = ${spring.application.name}-${spring.profiles.active}.${spring.cloud.na
 
 
 
-## Nacos 控制台详解
+## Nacos 配置说明
 
 在实际开发场景中，我们需要针对不同的开发环境采用不同的系统环境配置，如下是Nacos的领域模型。
 

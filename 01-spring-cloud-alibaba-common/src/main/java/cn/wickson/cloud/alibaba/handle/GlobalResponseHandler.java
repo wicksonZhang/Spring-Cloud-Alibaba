@@ -17,7 +17,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author ZhangZiHeng
  * @date 2023-12-27
  */
-@ControllerAdvice(basePackages = {"cn.wickson.cloud.alibaba.consumer.controller"})
+@ControllerAdvice(
+        basePackages = {
+                "cn.wickson.cloud.alibaba.consumer.controller",
+                "cn.wickson.cloud.alibaba.sentinel.controller"
+        })
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
     /**
