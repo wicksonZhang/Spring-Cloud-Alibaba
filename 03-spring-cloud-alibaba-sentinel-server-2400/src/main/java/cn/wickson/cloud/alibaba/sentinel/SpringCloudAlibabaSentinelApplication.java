@@ -11,7 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @date 2024-01-25
  */
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = "cn.wickson.cloud.alibaba")
+@SpringBootApplication
 public class SpringCloudAlibabaSentinelApplication {
 
     public static void main(String[] args) {

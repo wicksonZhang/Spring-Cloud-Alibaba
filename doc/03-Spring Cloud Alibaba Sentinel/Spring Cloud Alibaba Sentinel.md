@@ -90,7 +90,9 @@ INFO: log name use pid is: false
 5. 创建 SentinelController 控制类
 ```
 
-**Step-1: 创建 sentinel 服务：03-spring-cloud-alibaba-sentinel-server-2400**
+### 创建 sentinel 服务
+
+* 创建 sentinel 服务名称：03-spring-cloud-alibaba-sentinel-server-2400
 
 ### 导入 pom.xml 依赖
 
@@ -162,7 +164,7 @@ management:
  * @date 2024-01-25
  */
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = "cn.wickson.cloud.alibaba")
+@SpringBootApplication
 public class SpringCloudAlibabaSentinelApplication {
 
     public static void main(String[] args) {
@@ -188,13 +190,13 @@ public class SpringCloudAlibabaSentinelApplication {
 public class SentinelController {
 
     @GetMapping("/service1")
-    public String service1() {
-        return "This is SentinelController.service1()";
+    public ResultUtil service1() {
+        return ResultUtil.success("This is SentinelController.service1()");
     }
 
     @GetMapping("/service2")
-    public String service2() {
-        return "This is SentinelController.service2()";
+    public ResultUtil service2() {
+        return ResultUtil.success("This is SentinelController.service2()");
     }
 
 }
@@ -268,9 +270,9 @@ public class SentinelController {
 
 ```java
     @GetMapping("/service1")
-    public String service1() throws InterruptedException {
+    public ResultUtil service1() throws InterruptedException {
         TimeUnit.SECONDS.sleep(1);
-        return "This is SentinelController.service1()";
+        return ResultUtil.success("This is SentinelController.service1()");
     }
 ```
 
@@ -328,6 +330,121 @@ public class SentinelController {
 
 
 
+### 自定义限流配置
+
+* 由于上诉中所有抛出的异常都是 Sentinel 自带异常 `Blocked by Sentinel（flow limiting）` ，我们需要自定义抛出异常信息。
+
+#### 实现需求
+
+```tex
+1. Step-1：创建自定义限流控制类：SentinelCustomerController
+2. Step-2：创建自定义限流处理类：SentinelBlockHandle
+3. Step-3：创建 Sentinel 界面配置: 资源名称限流、URL 地址限流
+4. Step-4：单元测试: 资源名称限流、URL 地址限流
+```
+
+#### 实现结果
+
+* 使用 **资源名称限流** 测试，最后的打印结果是自定义信息。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291630030.gif" alt="image" style="zoom:100%;float:left" />
+
+* 使用 **URL 地址限流** 测试，最后的打印结果是 `Sentinel` 自带的异常信息。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291626022.gif" alt="image" style="zoom:100%;float:left" />
+
+#### 代码截图
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291634167.png" alt="image-20240129163457128" style="zoom:100%;float:left" />
+
+
+
+#### 实现步骤
+
+**Step-1：创建自定义限流控制类：SentinelCustomerController**
+
+* **@SentinelResource：**用于定义资源，并提供可选的异常处理和 fallback 配置项
+* **value：**资源名称
+* **blockHandlerClass：**对应的类的 Class 对象
+* **blockHandler：**blockHandler 对应处理 BlockException 的函数名称
+
+```java
+@RestController
+@RequestMapping("/sentinel")
+public class SentinelCustomerController {
+
+    /**
+     * SentinelResource: 用于定义资源，并提供可选的异常处理和 fallback 配置项。
+     * * value: 资源名称
+     * * blockHandlerClass: 对应的类的 Class 对象
+     * * blockHandler: blockHandler 对应处理 BlockException 的函数名称
+     */
+    @GetMapping("/rateLimit/customerBlockHandler")
+    @SentinelResource(value = "customerBlockHandler", blockHandlerClass = SentinelExceptionHandler.class, blockHandler = "handleException")
+    public ResultUtil customerBlockHandler() {
+        return ResultUtil.success("This is SentinelCustomerController customerBlockHandler()");
+    }
+
+}
+```
+
+**Step-2：创建自定义限流处理类：SentinelBlockHandle**
+
+```java
+
+/**
+ * sentinel限流、降级和熔断全局异常处理类
+ */
+public class SentinelExceptionHandler {
+
+    public static ResultUtil handleException(BlockException exception) {
+        ResultUtil resultUtil = new ResultUtil();
+        try {
+            if (exception instanceof FlowException) {
+                resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_INTERFACE_CURRENT_LIMIT);
+            }
+            if (exception instanceof DegradeException) {
+                resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_SERVICE_DOWNGRADE);
+            }
+            if (exception instanceof ParamFlowException) {
+                resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_HOTSPOT_PARAMETER_CURRENT_LIMIT);
+            }
+            if (exception instanceof SystemBlockException) {
+                resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_TRIGGER_SYSTEM_PROTECTION_RULES);
+            }
+            if (exception instanceof AuthorityException) {
+                resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_AUTHORIZATION_RULES_FAILED);
+            }
+        } catch (Exception e) {
+            // 处理异常，可以记录日志或者返回特定的错误信息
+            return ResultUtil.failure(ResultCodeEnum.SENTINEL_INTERFACE_CURRENT_LIMIT);
+        }
+        return resultUtil;
+    }
+
+}
+```
+
+**Step-3：创建 Sentinel 界面配置**
+
+在 Sentinel 控制台界面中，存在两种不同的限流方式，分别是 **资源名称限流** 和 **URL 地址限流**
+
+* **资源名称限流**：资源名称是通过在 `@SentinelResource` 注解中指定的。
+* **URL 地址限流**：限流规则会根据请求的 URL 进行匹配。
+* **注意：**使用 **URL 地址限流** 会抛出 Sentinel 自带异常 `Blocked by Sentinel（flow limiting）` ，使用 资源名称限流 则会走自定义的异常。
+
+![image-20240129143143552](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291431615.png)
+
+* 使用 **资源名称限流** 配置 Sentinel 界面信息
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291444490.png" alt="image-20240129144440448" style="zoom:100%;float:left" />
+
+* 使用 **URL 地址限流** 配置 Sentinel 界面信息
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401291625479.png" alt="image-20240129162512418" style="zoom:100%;float:left" />
+
+
+
 ## Sentinel 熔断降级
 
 > 官网地址：https://sentinelguard.io/zh-cn/docs/circuit-breaking.html
@@ -338,7 +455,9 @@ public class SentinelController {
 
 <img src="https://user-images.githubusercontent.com/9434884/62410811-cd871680-b61d-11e9-9df7-3ee41c618644.png" alt="chain" style="zoom:80%;float:left" />
 
-### 降级策略
+
+
+### 服务降级策略
 
 在 Sentinel 中，降级策略是一种应对系统负载过大或异常情况的手段，通过限制或拒绝一定比例的请求，以保护系统的稳定性和可靠性。
 
@@ -360,9 +479,9 @@ public class SentinelController {
 
 ```java
     @GetMapping("/service3")
-    public String service3() throws InterruptedException {
+    public ResultUtil service3() throws InterruptedException {
         TimeUnit.SECONDS.sleep(1);
-        return "This is SentinelController.service3() Slow Request Ratio";
+        return ResultUtil.success("This is SentinelController.service3() Slow Request Ratio");
     }
 ```
 
@@ -383,8 +502,8 @@ public class SentinelController {
 * 代码配置
 
 ```java
-    @GetMapping("/service4")
-    public String service4() {
+	@GetMapping("/service4")
+    public ResultUtil service4() {
         throw new ArithmeticException("/ by zero");
     }
 ```
@@ -409,6 +528,28 @@ public class SentinelController {
 
 
 
+### 服务熔断
+
+#### 实现需求
+
+
+
+#### 实现结果
+
+
+
+#### Ribbon 实现
+
+
+
+
+
+#### OpenFeign 实现
+
+
+
+
+
 ## Sentinel 热点规则
 
 > 官网地址：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
@@ -424,12 +565,12 @@ public class SentinelController {
 ```java
     @GetMapping("/service5")
     @SentinelResource(value = "hotKey", blockHandler = "dealHotKey")
-    public String service5(@RequestParam(value = "param1",required = false) String param1) {
-        return "This is SentinelController.service5() Hot Key";
+    public ResultUtil service5(@RequestParam(value = "param1",required = false) String param1) {
+        return ResultUtil.success("This is SentinelController.service5() Hot Key");
     }
 
-    public String dealHotKey(String param1, BlockException exception) {
-        return "This is SentinelController.service5() dealHotKey: Error";
+    public ResultUtil dealHotKey(String param1, BlockException exception) {
+        return ResultUtil.success("This is SentinelController.service5() dealHotKey: Error");
     }
 ```
 
@@ -443,3 +584,4 @@ public class SentinelController {
 
 
 
+## Sentinel 持久化配置

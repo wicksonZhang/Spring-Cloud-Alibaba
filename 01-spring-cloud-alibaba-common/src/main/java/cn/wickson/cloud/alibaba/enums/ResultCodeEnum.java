@@ -32,6 +32,15 @@ public enum ResultCodeEnum {
     PARAM_REQUEST_DATA_FORMAT_INVALID(1005, "请求参数的数据格式错误"),
     PARAM_VALIDATED_FAILURE(1006, "参数校验失败"),
 
+    /**
+     * Sentinel 限流：2001 - 2050
+     */
+    SENTINEL_INTERFACE_CURRENT_LIMIT(2001, "Sentinel 接口限流"),
+    SENTINEL_SERVICE_DOWNGRADE(2002, "Sentinel 服务降级"),
+    SENTINEL_HOTSPOT_PARAMETER_CURRENT_LIMIT(2003, "Sentinel 热点参数限流"),
+    SENTINEL_TRIGGER_SYSTEM_PROTECTION_RULES(2004, "Sentinel 触发系统保护规则"),
+    SENTINEL_AUTHORIZATION_RULES_FAILED(2005, "Sentinel 授权规则不通过"),
+
     /* 三方接口调用错误码：8001-8500 */
     TOKEN_ISNULL_ERROR(7001, "用户未登录，请先登录"),
     TOKEN_INVALID_ERROR(7002, "非法的token"),

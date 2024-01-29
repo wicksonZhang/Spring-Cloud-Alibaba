@@ -27,6 +27,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- Spring Cloud alibaba Sentinel 服务限流于熔断 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
         <!-- 单元测试依赖包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
