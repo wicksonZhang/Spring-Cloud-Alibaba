@@ -369,6 +369,12 @@ public class SentinelController {
 
 #### 实现步骤
 
+```tex
+1. Step-1：创建自定义限流控制类：SentinelCustomerController
+2. Step-2：创建自定义限流处理类：SentinelBlockHandle
+3. Step-3：创建 Sentinel 界面配置
+```
+
 **Step-1：创建自定义限流控制类：SentinelCustomerController**
 
 * **@SentinelResource：**用于定义资源，并提供可选的异常处理和 fallback 配置项
@@ -825,7 +831,7 @@ public class ProducerFallback implements ApiProducerFeign {
 
 ### 实现结果
 
-
+![image](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301406801.gif)
 
 
 
