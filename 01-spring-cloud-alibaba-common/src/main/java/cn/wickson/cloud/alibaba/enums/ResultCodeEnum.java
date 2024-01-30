@@ -40,6 +40,7 @@ public enum ResultCodeEnum {
     SENTINEL_HOTSPOT_PARAMETER_CURRENT_LIMIT(2003, "Sentinel 热点参数限流"),
     SENTINEL_TRIGGER_SYSTEM_PROTECTION_RULES(2004, "Sentinel 触发系统保护规则"),
     SENTINEL_AUTHORIZATION_RULES_FAILED(2005, "Sentinel 授权规则不通过"),
+    SENTINEL_PRODUCER_NULL_POINT_EXCEPTION(2006, "没有对应的id"),
 
     /* 三方接口调用错误码：8001-8500 */
     TOKEN_ISNULL_ERROR(7001, "用户未登录，请先登录"),

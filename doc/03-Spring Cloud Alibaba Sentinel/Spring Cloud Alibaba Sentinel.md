@@ -80,6 +80,20 @@ INFO: log name use pid is: false
 
 ## Sentinel 具体操作
 
+### 实现需求
+
+```tex
+搭建 Sentinel 微服务项目，配合 Sentinel Dashboard 结合使用。当访问对应的控制链路时，在控制台中出现对应的监控信息。
+```
+
+
+
+### 实现结果
+
+* 当我们访问控制类接口：http://localhost:2400/sentinel/service1 ，在 Sentinel 的控制台界面会出现如下调用链路。
+
+![image-20240125172641743](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401251726813.png)
+
 ### 实现步骤
 
 ```tex
@@ -90,11 +104,11 @@ INFO: log name use pid is: false
 5. 创建 SentinelController 控制类
 ```
 
-### 创建 sentinel 服务
+#### 创建 sentinel 服务
 
 * 创建 sentinel 服务名称：03-spring-cloud-alibaba-sentinel-server-2400
 
-### 导入 pom.xml 依赖
+#### 导入 pom.xml 依赖
 
 ```xml
 <dependencies>
@@ -125,7 +139,7 @@ INFO: log name use pid is: false
 </dependencies>
 ```
 
-### 创建 application.yml 依赖
+#### 创建 application.yml 依赖
 
 ```yaml
 server:
@@ -154,7 +168,7 @@ management:
         include: "*"
 ```
 
-### 创建启动类
+#### 创建启动类
 
 ```java
 /**
@@ -174,7 +188,7 @@ public class SpringCloudAlibabaSentinelApplication {
 }
 ```
 
-### 创建控制类
+#### 创建控制类
 
 ```java
 /**
@@ -201,12 +215,6 @@ public class SentinelController {
 
 }
 ```
-
-### 单元测试
-
-* 当我们访问控制类接口：http://localhost:2400/sentinel/service1 ，在 Sentinel 的控制台界面会出现如下调用链路。
-
-![image-20240125172641743](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401251726813.png)
 
 
 
@@ -377,7 +385,7 @@ public class SentinelCustomerController {
      * SentinelResource: 用于定义资源，并提供可选的异常处理和 fallback 配置项。
      * * value: 资源名称
      * * blockHandlerClass: 对应的类的 Class 对象
-     * * blockHandler: blockHandler 对应处理 BlockException 的函数名称
+     * * blockHandler: blockHandler 对应限流处理 BlockException 的函数名称
      */
     @GetMapping("/rateLimit/customerBlockHandler")
     @SentinelResource(value = "customerBlockHandler", blockHandlerClass = SentinelExceptionHandler.class, blockHandler = "handleException")
@@ -399,6 +407,7 @@ public class SentinelExceptionHandler {
 
     public static ResultUtil handleException(BlockException exception) {
         ResultUtil resultUtil = new ResultUtil();
+        // 处理限流
         try {
             if (exception instanceof FlowException) {
                 resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_INTERFACE_CURRENT_LIMIT);
@@ -416,7 +425,7 @@ public class SentinelExceptionHandler {
                 resultUtil = ResultUtil.failure(ResultCodeEnum.SENTINEL_AUTHORIZATION_RULES_FAILED);
             }
         } catch (Exception e) {
-            // 处理异常，可以记录日志或者返回特定的错误信息
+            // 处理熔断，可以记录日志或者返回特定的错误信息
             return ResultUtil.failure(ResultCodeEnum.SENTINEL_INTERFACE_CURRENT_LIMIT);
         }
         return resultUtil;
@@ -532,21 +541,231 @@ public class SentinelExceptionHandler {
 
 #### 实现需求
 
+```tex
+1. Step-1：创建消费者 03-spring-cloud-alibaba-sentinel-consumer-2500
+2. Step-2：创建生产者 03-spring-cloud-alibaba-sentinel-producer2-2600
+3. Step-3：创建生产者 03-spring-cloud-alibaba-sentinel-producer3-2700
+4. 通过访问消费者然后从生产者获取对应的消息进行返回
+```
+
 
 
 #### 实现结果
+
+##### Ribbon 实现结果
+
+* 不进行任何 Sentinel 限流、降级配置，当出现业务异常时进行降级处理
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301022165.gif" alt="image" style="zoom:100%;float:left" />
+
+* 配置 Sentinel 限流操作时, 正常情况下QPS每秒超过1S时进行限流，出现异常情况下，限流和降级同时出现。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301023120.png" alt="image-20240130102352079" style="zoom:100%;float:left" />
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301025462.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+##### OpenFeign 实现结果
+
+* 测试服务降级：关闭生产者 producer1、producer2 的服务
+* 测试流量控制：在 Sentinel 中配置流控规则
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301115999.png" alt="image-20240130111556951" style="zoom:100%;float:left" />
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301118259.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 代码截图
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301031204.png" alt="image-20240130103147159" style="zoom:100%;float:left" />
 
 
 
 #### Ribbon 实现
 
+**@SentinelResource**
 
+```java
+@SentinelResource(
+    value = "fallback", // 资源限定名
+    fallback = "handlerFallback", // fallback: 降级时调用; 
+    blockHandler = "blockHandler", // blockHandler: 流控时调用;
+    exceptionsToIgnore = {IllegalArgumentException.class} // 忽略异常信息
+)
+```
+
+
+
+* 消费者-控制类
+
+```java
+/**
+ * 消费者-控制类
+ *
+ * @author ZhangZiHeng
+ * @date 2024-01-29
+ */
+@Slf4j
+@Validated
+@RestController
+@RequestMapping("/ribbon/consumer")
+public class RibbonConsumerController {
+
+    @Value("${service-url.sentinel-producer-service}")
+    private String serviceUrl;
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/fallback/{id}")
+    // fallback 降级时调用
+//    @SentinelResource(value = "fallback",fallback = "handlerFallback")
+    // fallback: 降级时调用; blockHandler: 流控时调用;
+    @SentinelResource(value = "fallback", fallback = "handlerFallback", blockHandler = "blockHandler")
+    // fallback: 降级时调用; blockHandler: 流控时调用; exceptionsToIgnore: 忽略异常
+//    @SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandler", exceptionsToIgnore = {IllegalArgumentException.class})
+    public ResultUtil fallback(@PathVariable("id") Long id) {
+        ResultUtil result = restTemplate.getForObject(serviceUrl + "/producer/" + id, ResultUtil.class);
+        if (result == null) {
+            throw new NullPointerException("Id is not found");
+        }
+        if (null == result.getData()) {
+            throw new IllegalArgumentException("param is not found");
+        }
+        return result;
+    }
+
+    public ResultUtil handlerFallback(Long id, Throwable throwable) {
+        return ResultUtil.failure(ResultCodeEnum.SYSTEM_ERROR, "id: " + id + " ,fallback: 降级时调用, " + throwable.getMessage());
+    }
+
+    public ResultUtil blockHandler(Long id, BlockException blockException) {
+        return ResultUtil.failure(ResultCodeEnum.SYSTEM_ERROR, "id: " + id + " ,blockHandler: 流控时调用, " + blockException.getMessage());
+    }
+
+}
+
+```
+
+* **生产者-控制类**
+
+```java
+@Slf4j
+@Validated
+@RestController
+public class Producer1Controller {
+
+    @GetMapping("/producer/{id}")
+    public ResultUtil producer1(@PathVariable("id") Long id) {
+        Map<Long, String> map = this.getResult();
+        return ResultUtil.success(map.get(id));
+    }
+
+    private Map<Long, String> getResult() {
+        Map<Long, String> map = new HashMap<>();
+        map.put(1L, UUID.randomUUID().toString());
+        map.put(2L, UUID.randomUUID().toString());
+        map.put(3L, UUID.randomUUID().toString());
+        return map;
+    }
+
+}
+```
 
 
 
 #### OpenFeign 实现
 
+* 注意：**使用 `OpenFeign` 本质上还是和 `Ribbon` 有区别的**
 
+**实现步骤**
+
+```tex
+1. Step-1: 开启消费者启动类 Sentinel 限流控制注解
+2. Step-2: 配置消费者 application.yml 中 feign 对 Sentinel 的支持
+3. Step-3: 创建消费者控制类 FeignConsumerController
+4. Step-4: 创建消费者 Feign 调用类 ApiProducerFeign、ProducerFallback
+```
+
+**Step-1: 开启启动类 Sentinel 限流控制注解**
+
+```java
+/**
+ * Spring Cloud Alibaba Sentinel 消费者启动类
+ *
+ * @author ZhangZiHeng
+ * @date 2024-01-29
+ */
+@EnableDiscoveryClient
+@EnableFeignClients
+@SpringBootApplication
+public class SpringCloudAlibabaSentinelConsumerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringCloudAlibabaSentinelConsumerApplication.class, args);
+    }
+
+}
+```
+
+**Step-2: 配置 application.yml 中 feign 对 Sentinel 的支持**
+
+```yaml
+ # 开启 Feign 对 Sentinel 支持
+feign:
+  sentinel:
+    enabled: true
+```
+
+**Step-3: 创建消费者控制类 FeignConsumerController**
+
+```java
+@Slf4j
+@Validated
+@RestController
+@RequestMapping("/feign/consumer")
+public class FeignConsumerController {
+
+    @Resource
+    private ApiProducerFeign producerFeign;
+
+    @GetMapping("/fallback/{id}")
+    public ResultUtil fallback(@PathVariable("id") Long id) {
+        return producerFeign.producer(id);
+    }
+}
+```
+
+**Step-4: 创建消费者 Feign 调用类 ApiProducerFeign、ProducerFallback**
+
+* ApiProducerFeign.java
+
+```java
+@Component
+@FeignClient(value = "spring-cloud-alibaba-sentinel-producer", fallback = ProducerFallback.class)
+public interface ApiProducerFeign {
+
+    @GetMapping("/producer/{id}")
+    public ResultUtil producer(@PathVariable("id") Long id);
+
+}
+```
+
+* ProducerFallback.java
+
+```java
+@Component
+public class ProducerFallback implements ApiProducerFeign {
+
+    @Override
+    public ResultUtil producer(Long id) {
+        return ResultUtil.failure(ResultCodeEnum.SYSTEM_ERROR, "id: " + id + " ,fallback: 降级时调用");
+    }
+
+}
+```
 
 
 
@@ -559,6 +778,18 @@ public class SentinelExceptionHandler {
 * **QPS 限制（Queries Per Second）：**对于特定的热点 key，限制每秒钟允许的请求次数。
 
 <img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401261732982.png" alt="image-20240126173224922" style="zoom:100%;float:left" />
+
+### 实现需求
+
+```tex
+当我们访问 http://localhost/sentinel/service5?param1=1 时，当参数索引 0 每秒的 QPS 阈值超过了 1 则进行限流。
+```
+
+### 实现结果
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401261757401.gif" alt="image" style="zoom:100%;float:left" />
+
+### 实现步骤
 
 * **代码配置**
 
@@ -578,10 +809,112 @@ public class SentinelExceptionHandler {
 
 <img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401261755719.png" alt="image-20240126175533678" style="zoom:100%;float:left" />
 
-* 测试结果
-
-<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401261757401.gif" alt="image" style="zoom:100%;float:left" />
-
 
 
 ## Sentinel 持久化配置
+
+* 每当我们服务重启之后，所有的配置 **流控规则**、**降级规则**、**热点参数限流规则** 全部都会失效，所以针对这个问题直接配合 Nacos 做到持久化。
+
+### 实现需求
+
+```tex
+当项目重启之后依旧保留 Sentinel 服务的流控规则、降级规则、热点参数限流规则配置
+```
+
+
+
+### 实现结果
+
+
+
+
+
+### 实现步骤
+
+```tex
+1. Step-1: 导入消费者 pom.xml 依赖
+2. Step-2: 修改消费者 application.yml 配置
+3. Step-3: 创建 Nacos 配置信息
+4. Step-4: 创建对应 Sentinel 控制类的方法
+5. Step-5: 创建 Sentinel 流控规则配置信息
+```
+
+**Step-1: 导入消费者 pom.xml 依赖**
+
+```xml
+<!-- 集成 Nacos 做持久化信息 -->
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+```
+
+**Step-2: 修改消费者 application.yml 配置**
+
+```yaml
+spring:
+  application:
+    name: spring-cloud-alibaba-sentinel-consumer
+  cloud:
+    nacos:
+      discovery:
+        # Nacos 服务注册中心地址
+        server-addr: 192.168.10.20:8001
+        ip: 192.168.10.221
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 配置 Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 默认端口 8719
+        port: 8719
+        # 集成 Nacos 做持久化
+          datasource:
+            ds1:
+              nacos:
+                server-addr: 192.168.10.20:8001
+                dataId: spring-cloud-alibaba-sentinel-consumer
+                groupId: DEFAULT_GROUP
+                data-type: json
+                rule_type: flow
+```
+
+**Step-3: 创建 Nacos 配置信息**
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301402879.png" alt="image-20240130140225806" style="zoom:100%;float:left" />
+
+```json
+[
+  {
+    "resource": "/feign/consumer/fallback/persistence",
+    "limitApp": "default",
+    "grade": 1,
+    "count": 1,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "clusterMode": false
+  }
+]
+```
+
+**Step-4: 创建对应 Sentinel 控制类的方法**
+
+```java
+@Slf4j
+@Validated
+@RestController
+@RequestMapping("/feign/consumer")
+public class FeignConsumerController {
+
+    @GetMapping("/fallback/persistence")
+    public ResultUtil persistence() {
+        return ResultUtil.success();
+    }
+
+}
+```
+
+**Step-5: 创建 Sentinel 流控规则配置信息**
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301357421.png" alt="image-20240130135719354" style="zoom:100%;float:left" />

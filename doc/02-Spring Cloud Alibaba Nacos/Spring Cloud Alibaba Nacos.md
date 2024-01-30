@@ -667,6 +667,16 @@ success
 [root@localhost bin]#
 ```
 
+* **注意事项：**[nacos伪集群启动成功，但是服务注册不上的问题](https://blog.csdn.net/kangxiaoyanl/article/details/132177499)
+
+```shell
+[root@localhost bin]# firewall-cmd --zone=public --add-port=9849/tcp --permanent
+success
+[root@localhost bin]# firewall-cmd --reload
+success
+[root@localhost bin]#
+```
+
 
 
 ### ip 直连模式
@@ -702,7 +712,7 @@ spring:
 
 **Nginx代理转发：**本质上就是通过配置了一个 负载均衡 分别路由到不同的 Nacos 中。
 
-* Nginx 配置如下
+* **Nginx 配置如下**
 
 ```nginx
 # 默认配置就是轮询策略

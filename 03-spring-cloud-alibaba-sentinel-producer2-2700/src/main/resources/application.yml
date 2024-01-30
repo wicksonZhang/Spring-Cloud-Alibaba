@@ -1,0 +1,27 @@
+server:
+  port: 2700
+
+spring:
+  application:
+    name: spring-cloud-alibaba-sentinel-producer
+  cloud:
+    nacos:
+      discovery:
+        # Nacos 服务注册中心地址
+        server-addr: 192.168.10.20:8001
+        ip: 192.168.10.221
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 配置 Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 默认端口 8719
+        port: 8719
+
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
