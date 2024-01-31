@@ -20,6 +20,10 @@
         <module>03-spring-cloud-alibaba-sentinel-consumer-2500</module>
         <module>03-spring-cloud-alibaba-sentinel-producer1-2600</module>
         <module>03-spring-cloud-alibaba-sentinel-producer2-2700</module>
+        <module>04-spring-cloud-alibaba-seata-business-2800</module>
+        <module>04-spring-cloud-alibaba-seata-storage-2900</module>
+        <module>04-spring-cloud-alibaba-seata-order-3000</module>
+        <module>04-spring-cloud-alibaba-seata-account-3100</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->
@@ -27,9 +31,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
-        <spring.cloud.version>Hoxton.SR1</spring.cloud.version>
-        <spring.cloud.alibaba.version>2.1.0.RELEASE</spring.cloud.alibaba.version>
+        <spring.boot.version>2.6.3</spring.boot.version>
+        <spring.cloud.version>2021.0.1</spring.cloud.version>
+        <spring.cloud.alibaba.version>2021.0.1.0</spring.cloud.alibaba.version>
+        <mysql.version>5.1.47</mysql.version>
+        <druid.version>1.1.10</druid.version>
+        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.16.18</lombok.version>
@@ -40,7 +47,7 @@
     <!--项目依赖包统一管理-->
     <dependencyManagement>
         <dependencies>
-            <!--spring boot 2.2.2-->
+            <!--spring boot 2.4.2-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -49,7 +56,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <!--spring cloud Hoxton.SR1-->
+            <!--spring cloud 2020.0.1 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -58,13 +65,40 @@
                 <scope>import</scope>
             </dependency>
 
-            <!--spring cloud alibaba 2.1.0.RELEASE-->
+            <!--spring cloud alibaba 2021.1 -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!--mysql依赖包-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!--数据库连接池依赖包-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!--mybatis-plus依赖包-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>2.0.2</version>
             </dependency>
 
             <dependency>

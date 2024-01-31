@@ -42,6 +42,13 @@ public enum ResultCodeEnum {
     SENTINEL_AUTHORIZATION_RULES_FAILED(2005, "Sentinel 授权规则不通过"),
     SENTINEL_PRODUCER_NULL_POINT_EXCEPTION(2006, "没有对应的id"),
 
+    /**
+     * Seata 分布式事务：2051 - 3000
+     */
+    SEATA_STOCK_CODE_NULL_POINT_EXCEPTION(2051, "库存中没有对应的商品"),
+    SEATA_STOCK_INVENTORY_SHORTAGE(2052, "当前商品库存不足"),
+    SEATA_STOCK_UPDATE_ERROR(2053, "当前商品库存更新失败"),
+
     /* 三方接口调用错误码：8001-8500 */
     TOKEN_ISNULL_ERROR(7001, "用户未登录，请先登录"),
     TOKEN_INVALID_ERROR(7002, "非法的token"),

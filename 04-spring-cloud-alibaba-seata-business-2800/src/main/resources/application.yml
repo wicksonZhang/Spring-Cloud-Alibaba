@@ -1,0 +1,54 @@
+server:
+  port: 2800
+#==================================== stream =============================================
+spring:
+  application:
+    name: spring-cloud-alibaba-seata-business
+  cloud:
+    #==================================== Nacos ==========================================
+    nacos:
+      discovery:
+        # Nacos 服务注册中心地址
+        server-addr: http://192.168.10.20:8001
+        ip: 192.168.10.221
+    #==================================== Sentinel =======================================
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 配置 Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 默认端口 8719
+        port: 8719
+
+#================================= Seata Config ===========================================
+# seata 客户端配置
+seata:
+  enabled: true
+  application-id: seata-business
+  tx-service-group: business_tx_group
+  service:
+    vgroup-mapping:
+      business_tx_group: default
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: http://192.168.10.20:8001
+      namespace: public
+      group: DEFAULT_GROUP
+      cluster: default
+
+#==================================== 暴露端点 =============================================
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#===================================== Feign ==============================================
+# 开启 Feign 对 Sentinel 支持
+feign:
+  sentinel:
+    enabled: true

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
@@ -93,18 +92,6 @@ public class GlobalExceptionHandler {
         ResultCodeEnum codeEnum = ResultCodeEnum.PARAM_IS_INVALID;
         String msg = this.messageFormat(codeEnum.getDescription(), e.getFieldErrors());
         return ResultUtil.failure(ResultCodeEnum.PARAM_IS_INVALID, msg);
-    }
-
-    /**
-     * 请求参数校验异常处理方式四
-     */
-    @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResultUtil handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
-        log.error("requestUrl：{}，参数校验失败", request.getRequestURI(), e);
-        ResultCodeEnum codeEnum = ResultCodeEnum.PARAM_IS_BLANK;
-        String msg = codeEnum.getDescription() + "[" + e.getMessage() + "]";
-        return ResultUtil.failure(codeEnum, msg);
     }
 
     /**

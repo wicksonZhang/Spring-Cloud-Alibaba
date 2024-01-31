@@ -66,9 +66,9 @@
           <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
           <maven.compiler.source>1.8</maven.compiler.source>
           <maven.compiler.target>1.8</maven.compiler.target>
-          <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
-          <spring.cloud.version>Hoxton.SR1</spring.cloud.version>
-          <spring.cloud.alibaba.version>2.1.0.RELEASE</spring.cloud.alibaba.version>
+          <spring.boot.version>2.4.2</spring.boot.version>
+          <spring.cloud.version>2020.0.1</spring.cloud.version>
+          <spring.cloud.alibaba.version>2021.1</spring.cloud.alibaba.version>
           <junit.version>4.12</junit.version>
           <log4j.version>1.2.17</log4j.version>
           <lombok.version>1.16.18</lombok.version>
@@ -79,7 +79,7 @@
       <!--项目依赖包统一管理-->
       <dependencyManagement>
           <dependencies>
-              <!--spring boot 2.2.2-->
+              <!--spring boot 2.4.2-->
               <dependency>
                   <groupId>org.springframework.boot</groupId>
                   <artifactId>spring-boot-dependencies</artifactId>
@@ -88,7 +88,7 @@
                   <scope>import</scope>
               </dependency>
   
-              <!--spring cloud Hoxton.SR1-->
+              <!--spring cloud 2020.0.1 -->
               <dependency>
                   <groupId>org.springframework.cloud</groupId>
                   <artifactId>spring-cloud-dependencies</artifactId>
@@ -97,7 +97,7 @@
                   <scope>import</scope>
               </dependency>
   
-              <!--spring cloud alibaba 2.1.0.RELEASE-->
+              <!--spring cloud alibaba 2021.1 -->
               <dependency>
                   <groupId>com.alibaba.cloud</groupId>
                   <artifactId>spring-cloud-alibaba-dependencies</artifactId>
