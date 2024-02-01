@@ -48,6 +48,11 @@ public enum ResultCodeEnum {
     SEATA_STOCK_CODE_NULL_POINT_EXCEPTION(2051, "库存中没有对应的商品"),
     SEATA_STOCK_INVENTORY_SHORTAGE(2052, "当前商品库存不足"),
     SEATA_STOCK_UPDATE_ERROR(2053, "当前商品库存更新失败"),
+    SEATA_ACCOUNT_NULL_POINT_EXCEPTION(2054, "当前账户不存在"),
+    SEATA_ACCOUNT_INSUFFICIENT_BALANCE(2055, "当前账户余额不足"),
+    SEATA_STOCK_RPC_ERROR(2056, "库存扣减失败"),
+    SEATA_ORDER_RPC_ERROR(2057, "订单创建失败"),
+    SEATA_ACCOUNT_RPC_ERROR(2058, "账户余额扣减失败"),
 
     /* 三方接口调用错误码：8001-8500 */
     TOKEN_ISNULL_ERROR(7001, "用户未登录，请先登录"),

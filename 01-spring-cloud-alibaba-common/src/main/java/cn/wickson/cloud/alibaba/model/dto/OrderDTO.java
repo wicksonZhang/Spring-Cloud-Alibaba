@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -14,15 +15,17 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDTO implements ResultUnpacked {
+public class OrderDTO implements Serializable {
 
     private String orderNo;
 
-    private String userId;
+    private Long userId;
 
     private String commodityCode;
 
     private Integer orderCount;
+
+    private BigDecimal price;
 
     private BigDecimal orderAmount;
 

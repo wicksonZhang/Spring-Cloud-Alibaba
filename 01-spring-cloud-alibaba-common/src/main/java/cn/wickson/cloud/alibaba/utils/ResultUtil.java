@@ -90,6 +90,15 @@ public class ResultUtil implements Serializable {
     }
 
     /**
+     * 操作成功-有数据主体返回
+     *
+     * @return 返回Result类实例
+     */
+    public static ResultUtil failure(Integer code, String message) {
+        return getInstance(code, message);
+    }
+
+    /**
      * 获取Result类实例
      *
      * @return 返回Result类实例

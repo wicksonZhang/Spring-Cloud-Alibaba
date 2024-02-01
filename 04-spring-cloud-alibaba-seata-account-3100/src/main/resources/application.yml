@@ -15,8 +15,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.10.16:3306/account?useSSL=false&\
-      characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://192.168.10.16:3306/account?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: P@ssw0rd
 
@@ -43,7 +42,7 @@ mybatis-plus:
   # 指定加载Mapper.xml文件路径
   mapper-locations: classpath*:/mapper/**Mapper.xml
   # 指定扫描实体类的包路径
-  type-aliases-package: cn.wickson.alibaba.cloud.seata.account.model.entity
+  type-aliases-package: cn.wickson.cloud.alibaba.seata.account.model.entity
   # 开启自动驼峰命名规则
   configuration:
     map-underscore-to-camel-case: true

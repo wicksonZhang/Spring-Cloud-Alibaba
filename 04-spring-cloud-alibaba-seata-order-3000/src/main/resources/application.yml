@@ -15,8 +15,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.10.16:3306/order?useSSL=false&\
-      characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://192.168.10.16:3306/order?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: P@ssw0rd
 
@@ -43,7 +42,26 @@ mybatis-plus:
   # 指定加载Mapper.xml文件路径
   mapper-locations: classpath*:/mapper/**Mapper.xml
   # 指定扫描实体类的包路径
-  type-aliases-package: cn.wickson.alibaba.cloud.seata.order.model.entity
+  type-aliases-package: cn.wickson.cloud.alibaba.seata.order.model.entity
   # 开启自动驼峰命名规则
   configuration:
     map-underscore-to-camel-case: true
+
+#===================================== Feign ==============================================
+feign:
+  # 开启 Feign 对 Sentinel 支持
+  sentinel:
+    enabled: true
+  # 开启客户端连接
+  client:
+    config:
+      default:
+        # 建立连接所有的时间，适用于网络状况正常的情况，两端建立所花费时间
+        connectTimeout: 5000
+        # 建立连接后服务端读取可用资源所有的时间，默认是 1S
+        readTimeout: 5000
+
+#  open Feign 日志打印
+logging:
+  level:
+    cn.wickson.cloud.alibaba.seata.order.feign.ApiAccountFeign: debug

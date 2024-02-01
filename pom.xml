@@ -24,6 +24,7 @@
         <module>04-spring-cloud-alibaba-seata-storage-2900</module>
         <module>04-spring-cloud-alibaba-seata-order-3000</module>
         <module>04-spring-cloud-alibaba-seata-account-3100</module>
+        <module>05-spring-cloud-alibaba-gateway-server-9527</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

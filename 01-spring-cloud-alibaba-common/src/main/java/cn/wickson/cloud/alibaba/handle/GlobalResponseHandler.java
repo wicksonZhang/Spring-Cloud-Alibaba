@@ -20,6 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @ControllerAdvice(
         basePackages = {
                 "cn.wickson.cloud.alibaba.consumer.controller",
+                "cn.wickson.cloud.alibaba.seata.business.controller",
+                "cn.wickson.cloud.alibaba.seata.order.controller",
+                "cn.wickson.cloud.alibaba.seata.storage.controller",
+                "cn.wickson.cloud.alibaba.seata.account.controller"
         })
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 

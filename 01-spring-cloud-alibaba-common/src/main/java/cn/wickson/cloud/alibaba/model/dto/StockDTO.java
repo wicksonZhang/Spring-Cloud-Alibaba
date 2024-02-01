@@ -1,6 +1,5 @@
 package cn.wickson.cloud.alibaba.model.dto;
 
-import cn.wickson.cloud.alibaba.utils.ResultUnpacked;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockDTO implements ResultUnpacked {
+public class StockDTO {
 
     /**
      * 商品 Code

@@ -64,6 +64,14 @@
             <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
+        <!-- Java validation 验证 -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.0.Final</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>
