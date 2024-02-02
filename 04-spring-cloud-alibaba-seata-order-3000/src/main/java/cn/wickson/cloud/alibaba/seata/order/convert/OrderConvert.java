@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @author ZhangZiHeng
  * @date 2024-02-01
@@ -25,9 +27,9 @@ public interface OrderConvert {
      * @param orderDTO
      * @return
      */
-    @Mappings(
+    @Mappings({
             @Mapping(target = "amount", source = "orderDTO.orderAmount")
-    )
+    })
     AccountDTO toAccountDTO(OrderDTO orderDTO);
 
     /**
@@ -36,5 +38,16 @@ public interface OrderConvert {
      * @param orderDTO
      * @return
      */
+    @Mapping(target = "amount", source = "orderDTO.orderAmount")
+    @Mapping(target = "count", source = "orderDTO.orderCount")
     Order toOrderDO(OrderDTO orderDTO);
+
+    @Mapping(target = "orderAmount", source = "order.amount")
+    @Mapping(target = "orderCount", source = "order.count")
+    OrderDTO toOrderDTO(Order order);
+
+    @Mapping(target = "orderAmount", source = "order.amount")
+    @Mapping(target = "orderCount", source = "order.count")
+    List<OrderDTO> toOrderDTOList(List<Order> orderList);
+
 }

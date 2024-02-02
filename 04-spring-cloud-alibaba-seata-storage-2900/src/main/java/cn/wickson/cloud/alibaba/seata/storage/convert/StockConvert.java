@@ -5,6 +5,8 @@ import cn.wickson.cloud.alibaba.model.dto.StockDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @author ZhangZiHeng
  * @date 2024-01-31
@@ -21,4 +23,6 @@ public interface StockConvert {
      * @return StockDTO
      */
     StockDTO toDTO(Stock stock);
+
+    List<StockDTO> toStockDTO(List<Stock> stockList);
 }

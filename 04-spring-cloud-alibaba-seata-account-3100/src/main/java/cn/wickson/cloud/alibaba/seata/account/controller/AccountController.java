@@ -4,12 +4,10 @@ import cn.wickson.cloud.alibaba.seata.account.service.IAccountService;
 import cn.wickson.cloud.alibaba.model.dto.AccountDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author ZhangZiHeng
@@ -27,6 +25,11 @@ public class AccountController {
     @PutMapping("/debit")
     public void debit(@RequestBody AccountDTO accountDTO) {
         accountService.debit(accountDTO);
+    }
+
+    @GetMapping("/list")
+    public List<AccountDTO> listAll() {
+        return accountService.listAllByAccount();
     }
 
 }

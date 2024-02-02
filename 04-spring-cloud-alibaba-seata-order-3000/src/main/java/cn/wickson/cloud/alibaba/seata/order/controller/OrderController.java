@@ -4,12 +4,10 @@ import cn.wickson.cloud.alibaba.model.dto.OrderDTO;
 import cn.wickson.cloud.alibaba.seata.order.app.service.IOrderAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author ZhangZiHeng
@@ -29,4 +27,8 @@ public class OrderController {
         orderService.create(orderDTO);
     }
 
+    @GetMapping("/list")
+    public List<OrderDTO> listAll() {
+        return orderService.listAllByOrder();
+    }
 }

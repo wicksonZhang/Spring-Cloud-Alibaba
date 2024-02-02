@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author ZhangZiHeng
@@ -26,9 +27,10 @@ public class StockServiceImpl implements IStockService {
     private IStockRepository stockRepository;
 
     @Override
+    @Transactional(isolation= Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
     public StockDTO deduct(StockDTO stockDTO) {
         Stock stock = stockRepository.lambdaQuery()
-                .eq(ObjUtil.isNotNull(stockDTO.getCommodityCode()), Stock::getCommodityCode, stockDTO.getCommodityCode())
+                .eq(Stock::getCommodityCode, stockDTO.getCommodityCode())
                 .one();
         if (ObjUtil.isNull(stock)) {
             throw UserOperationException.getInstance(ResultCodeEnum.SEATA_STOCK_CODE_NULL_POINT_EXCEPTION);
@@ -44,5 +46,11 @@ public class StockServiceImpl implements IStockService {
             throw UserOperationException.getInstance(ResultCodeEnum.SEATA_STOCK_UPDATE_ERROR);
         }
         return StockConvert.INSTANCE.toDTO(stock);
+    }
+
+    @Override
+    public List<StockDTO> listAllByStock() {
+        List<Stock> stockList = stockRepository.list();
+        return StockConvert.INSTANCE.toStockDTO(stockList);
     }
 }
