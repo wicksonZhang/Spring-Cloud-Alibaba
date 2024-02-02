@@ -20,12 +20,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Spring Cloud alibaba Nacos 注册与发现 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>

@@ -19,18 +19,6 @@
             <artifactId>01-spring-cloud-alibaba-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- Spring Cloud alibaba Nacos 注册与发现 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
-        <!-- Spring Cloud alibaba config -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

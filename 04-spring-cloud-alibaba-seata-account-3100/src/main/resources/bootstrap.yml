@@ -1,0 +1,36 @@
+# ------------------------------------ Tomcat --------------------------------------------
+server:
+  port: 3100
+
+# ------------------------------------ Spring --------------------------------------------
+spring:
+  application:
+    # ---------------------------------- 应用名称 ------------------------------------------
+    name: spring-cloud-alibaba-seata-account
+  profiles:
+    # ---------------------------------- 环境配置 ------------------------------------------
+    active: dev
+  cloud:
+    # ------------------------------------ Nacos ------------------------------------------
+    nacos:
+      discovery:
+        # 服务注册中心地址
+        server-addr: 192.168.10.20:8001
+        # 服务注册中心命名空间
+        namespace: fc1c8c25-c514-4430-9197-3148654af6ab
+        # 服务注册中心组别名称
+        group: SEATA_DEV_GROUP
+        # ip
+        ip: 192.168.10.221
+      config:
+        # 配置中心地址
+        server-addr: 192.168.10.20:8001
+        # 配置文件格式
+        file-extension: yaml
+        # 命名空间配置
+        namespace: fc1c8c25-c514-4430-9197-3148654af6ab
+        # 指定组名为 SEATA_DEV_GROUP
+        group: SEATA_DEV_GROUP
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
