@@ -53,3 +53,8 @@ spring:
             group: SEATA_DEV_GROUP
             data-type: json
             rule_type: flow
+
+feign:
+  circuitbreaker:
+    # If true, an OpenFeign client will be wrapped with a Spring Cloud CircuitBreaker circuit breaker.
+    enabled: true

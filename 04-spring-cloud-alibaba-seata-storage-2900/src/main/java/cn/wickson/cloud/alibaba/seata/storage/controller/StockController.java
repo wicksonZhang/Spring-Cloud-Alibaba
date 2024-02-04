@@ -1,8 +1,7 @@
 package cn.wickson.cloud.alibaba.seata.storage.controller;
 
-import cn.wickson.cloud.alibaba.model.dto.OrderDTO;
-import cn.wickson.cloud.alibaba.seata.storage.service.IStockService;
 import cn.wickson.cloud.alibaba.model.dto.StockDTO;
+import cn.wickson.cloud.alibaba.seata.storage.app.service.IStockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

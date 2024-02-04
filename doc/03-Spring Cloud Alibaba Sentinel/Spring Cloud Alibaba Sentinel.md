@@ -404,6 +404,8 @@ public class SentinelCustomerController {
 
 **Step-2：创建自定义限流处理类：SentinelBlockHandle**
 
+* 切记：在调用端和全局异常类中的方法名，已经方法参数一定要保持一致。不然无法限流
+
 ```java
 
 /**
@@ -468,7 +470,7 @@ public class SentinelExceptionHandler {
 
 例如，支付的时候，可能需要远程调用银联提供的 API；然而，这个被依赖服务的稳定性是不能保证的。如果依赖的服务出现了不稳定的情况，请求的响应时间变长，那么调用服务的方法的响应时间也会变长，线程会产生堆积，最终可能耗尽业务自身的线程池，服务本身也变得不可用。
 
-<img src="https://user-images.githubusercontent.com/9434884/62410811-cd871680-b61d-11e9-9df7-3ee41c618644.png" alt="chain" style="zoom:80%;float:left" />
+![62410811-cd871680-b61d-11e9-9df7-3ee41c618644](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041540767.png)
 
 
 

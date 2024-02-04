@@ -1,13 +1,9 @@
-package cn.wickson.cloud.alibaba.seata.storage.service;
+package cn.wickson.cloud.alibaba.seata.storage.app.service;
 
 import cn.wickson.cloud.alibaba.model.dto.StockDTO;
 
 import java.util.List;
 
-/**
- * @author ZhangZiHeng
- * @date 2024-01-31
- */
 public interface IStockService {
 
     /**

@@ -10,7 +10,7 @@ Spring Cloud Alibaba Seata 主要解决了 **分布式事务一致性** 的问�
 
 例如在一个电商平台中，涉及到 订单服务 和 库存服务 两个微服务。在用户下单的时候，订单服务需要扣减库存。这会涉及到两个不同的服务之间的操作，因此需要保证在订单创建的过程中，需要保证库存的扣减是一个原子操作，要么全部成功，要么全部失败。
 
-总体而言，Seata通过提供分布式事务管理的功能，解决了在这种复杂环境下可能出现的事务一致性和可靠性的问题。
+总体而言，Seata通过提供分布式事务管理的功能，解决了在这种复杂环境下可能出现的事务 **一致性和可靠性** 的问题。
 
 
 
@@ -33,13 +33,13 @@ Spring Cloud Alibaba Seata 主要解决了 **分布式事务一致性** 的问�
 
 
 
-## 启动 Seata Server
+## Seata Server
 
-我们如果使用 `Seata` 还需要如下的一些配置来帮助我们解决问题：
+我们如果使用 `Seata` 还需如下的一些配置来帮助我们解决问题：
 
 * **Seata Server：**这是 Seata 的服务端组件，用于协调和管理分布式事务。
-* **配置 Seata Server：**在 Seata Server 的配置文件（`application.yml`）中，指定 Nacos 作为注册中心。
-* **创建 Nacos 配置文件：**在 Nacos 配置 Seata 相关的配置文件
+* **配置配置文件：**在 Seata Server 的配置文件（`application.yml`）中，指定 Nacos 作为注册中心。
+* **创建 Nacos 配置文件：**在 Nacos 配置 Seata 相关的配置文件。
 * **创建数据库：**Seata需要通过数据源代理来拦截数据库的操作，以实现分布式事务。
 
 
@@ -54,9 +54,7 @@ Spring Cloud Alibaba Seata 主要解决了 **分布式事务一致性** 的问�
 
 
 
-### Seata Server
-
-#### 修改 application.yml 文件
+### 修改配置文件
 
 * 文件地址：`seata-server-1.8.0\seata\conf\application.yml`
 
@@ -67,26 +65,26 @@ seata:
     # 使用nacos作为配置中心
     type: nacos
     nacos:
-      # 注册中心地址
+      # Nacos 注册中心地址
       server-addr: http://192.168.10.20:8001
-      # 命名空间配置
-      namespace: public
-      # 分组信息配置
-      group: DEFAULT_GROUP
-      username: nacos 
+      # Nacos 命名空间配置
+      namespace: fc1c8c25-c514-4430-9197-3148654af6ab
+      # Nacos 分组信息配置
+      group: SEATA_DEV_GROUP
+      username: nacos
       password: nacos
-      # nacos中的配置文件名称
-      data-id: spring-cloud-alibaba-seata-server.properties 
+      # Nacos中 的配置文件名称
+      data-id: spring-cloud-alibaba-seata-server.properties
   registry:
     # support: nacos, eureka, redis, zk, consul, etcd3, sofa
-    # 使用nacos作为注册中心
+    # Nacos 作为注册中心
     type: nacos
     nacos:
       application: seata-server
       server-addr: http://192.168.10.20:8001
-      group: DEFAULT_GROUP
-      namespace: public
-      # 此处注意,这的值要和 nacos 中的配置文件 service.vgroupMapping.seata_tx_group 的值一样
+      group: SEATA_DEV_GROUP
+      namespace: fc1c8c25-c514-4430-9197-3148654af6ab
+      # 此处注意,这的值要和 Nacos 配置文件 service.vgroupMapping.seata_tx_group 的值一样
       cluster: default
       username: nacos
       password: nacos
@@ -106,14 +104,14 @@ seata:
 
 ### 创建 Nacos 配置文件
 
-* 在 `Nacos` 中的 **配置管理 -> 配置列表** 添加配置
+* 在 `Nacos` 中的 **配置管理 -> 配置列表** 添加配置 `spring-cloud-alibaba-seata-server.properties`
 
-![image-20240130174925661](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401301749719.png)
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402021752657.png" alt="image-20240202175220610" style="zoom:100%;float:left" />
 
 * 配置信息如下
 
 ```properties
-# service.vgroupMapping.seata_tx_group 和前面 application.yml 的配置 seata.registry.nacos.cluster 的值是一样的
+# service.vgroupMapping.seata_tx_group 和前面的配置 seata.registry.nacos.cluster 的值是一样的
 service.vgroupMapping.seata_tx_group=default
 #这里的地址需要配置成seata所在服务器的地址
 service.default.grouplist=127.0.0.1:8091
@@ -255,17 +253,27 @@ CREATE TABLE `undo_log` (
 
 ![image-20240131105359172](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401311053235.png)
 
-<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401311052887.png" alt="image-20240131105245850" style="zoom:100%;float:left" />
+* **服务管理 --> 服务列表**
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402021753798.png" alt="image-20240202175355757" style="zoom:100%;float:left" />
 
 
 
-## Seata 案例实现
+## 案例实现
 
 > 案例来源：https://seata.apache.org/zh-cn/docs/v1.8/user/quickstart
 >
 > 参考案例：https://github.com/apache/incubator-seata-samples/tree/master/seata-spring-boot-starter-samples
 >
-> 本章节代码：
+> 本章节代码：https://github.com/wicksonZhang/Spring-Cloud-Alibaba
+>
+> 1. 01-spring-cloud-alibaba-common
+> 2. 04-spring-cloud-alibaba-seata-business-2800
+> 3. 04-spring-cloud-alibaba-seata-storage-2900
+> 4. 04-spring-cloud-alibaba-seata-order-3000
+> 5. 04-spring-cloud-alibaba-seata-account-3100
+> 6. 04-spring-cloud-alibaba-seata-web-3200
+> 7. 05-spring-cloud-alibaba-gateway-server-9527
 
 ### 环境选择
 
@@ -292,4 +300,294 @@ SpringCloudAlibaba: 2021.0.1.0
 <img src="https://seata.apache.org/zh-cn/assets/images/architecture-6bdb120b83710010167e8b75448505ec.png" alt="Architecture" style="zoom:100%;" />
 
 
+
+### 实现结果
+
+* 我们测试的结果分为两种情况：正常情况、异常情况
+  * 正常情况：当使用 @GlobalTransaction 进行分布式事务控制。
+  * 异常情况：当不使用 @GlobalTransaction 进行分布式事务控制。
+
+#### 正常情况
+
+> 正常情况下我们使用的是 @GlobalTransaction 进行控制分布式事务。我们分别从正常和异常两种情况进行测试
+
+当正常通过 Business 下单，调用订单服务、仓储服务。明显看到 库存服务、账户服务、订单服务 分别产生了如下数据。
+
+* **库存服务：**每日坚果的库存由 **30** 减少到了 **20**。
+* **订单服务**：产生了一条新的订单
+* **账户服务：**用户ID为 2 的用户，用于余额从 **170.5** 减少到了 **70.5**。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041350704.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+当我们再次下单，如果 **当前账户余额不足** 的情况下 **是否会产生订单信息、库存是否为减少？**。
+
+* 从如下结果可以看到 **库存服务、账户服务、订单服务** 数据并没有减少。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041400206.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 异常情况
+
+> 异常情况：当不使用 @GlobalTransaction 进行分布式事务控制。我们分别从 **正常** 和 **异常** 两种情况进行测试
+
+**正常通过 Business 下单，调用订单服务、仓储服务**，明显看到 库存服务、账户服务、订单服务 分别产生了如下数据：
+
+* **库存服务：**每日坚果的库存由 **20** 减少到了 **19**。
+* **订单服务**：产生了一条新的订单。
+* **账户服务：**用户ID为 2 的用户，用于余额从 **70.5** 减少到了 **69.5**。
+* 只要代码不出问题还是可以正常运行的。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041413149.gif" alt="image" style="zoom:80%;float:left" />
+
+
+
+当我们再次下单，如果 **当前账户余额不足** 的情况下 **是否会产生订单信息、库存是否为减少？**
+
+* 问题已经复现了，当我们出现 **当前账户余额不足** 的情况下，依旧把我们的库存给减少了。
+* **库存服务：**每日坚果 的库存从 19 减少到了 9。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041422531.gif" alt="image" style="zoom:80%;float:left" />
+
+
+
+### 代码结构
+
+> 由于本次是综合练习，所以准备使用 **DDD（领域驱动设计）** 进行开发。但为了避免代码过多，精简了一些代码。
+
+本次使用到的项目如下：
+
+```tex
+1. 01-spring-cloud-alibaba-common
+2. 04-spring-cloud-alibaba-seata-business-2800
+3. 04-spring-cloud-alibaba-seata-storage-2900
+4. 04-spring-cloud-alibaba-seata-order-3000
+5. 04-spring-cloud-alibaba-seata-account-3100
+6. 04-spring-cloud-alibaba-seata-web-3200
+7. 05-spring-cloud-alibaba-gateway-server-9527
+```
+
+我们以订单服务 **04-spring-cloud-alibaba-seata-order-3000** 简单介绍一下代码结构
+
+* 具体信息参考代码：[04-spring-cloud-alibaba-seata-order-3000](https://github.com/wicksonZhang/Spring-Cloud-Alibaba/tree/main/04-spring-cloud-alibaba-seata-order-3000/src/main/java/cn/wickson/cloud/alibaba/seata/order)
+
+```java
+├─src
+│  ├─main
+│  │  ├─java
+│  │  │  └─cn.wickson.cloud.alibaba.seata.order
+│  │  │     ├─app.service # 应用服务层、应用服务抽象类
+│  │  │     │  └─impl	  # 应用服务实现类
+│  │  │     ├─config	  # 配置类
+│  │  │     ├─controller  # 控制类
+│  │  │     ├─convert     # 转换类
+│  │  │     ├─feign		  # 远程调用
+│  │  │     │  └─fallback
+│  │  │     ├─mapper	  # mapper 类
+│  │  │     ├─model		  # 实体模型类
+│  │  │     │  └─entity
+│  │  │     └─repository  # 仓库类信息
+│  │  │        └─impl
+│  │  └─resources
+│  │      └─mapper
+```
+
+
+
+### 数据库配置
+
+我们本次创建三个数据库，具体如下：
+
+* order数据库：[order.sql](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041714369.sql)
+
+* storage数据库：[storage.sql](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041716233.sql)
+* order 数据库：[account.sql](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041717521.sql)
+
+
+
+### Nacos 配置
+
+* 点击下载 Nacos 配置信息：[Nacos配置信息](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041444042.zip)
+
+![image-20240204144345958](https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041443025.png)
+
+
+
+### Seata-Server 配置
+
+* 我们在 **Seata Server - 修改配置文件** 章节中已经配置完成。
+
+
+
+### 实现步骤
+
+> 关于 **代码结构** 中我已经给出了相关的代码案例，我们这里之说一下核心的调用流程代码。
+
+* **Business Service：**当我们调用 Business 服务的接口如下，如下代码只做了三件事情：
+  * Step-1：进行了基本的参数校验。
+  * Step-2：通过 OpenFeign 调用 Stock 库存服务减少库存。
+  * Step-3：通过 OpenFeign 调用 Order 订单服务创建订单。
+
+```java
+@Service
+public class BusinessAppServiceImpl extends AbstractBusinessAppService implements IBusinessAppService {
+
+    /**
+     * 采购商品
+     *
+     * @param businessVO
+     */
+    @Override
+    @GlobalTransactional(rollbackFor = Exception.class)
+    public void purchase(final BusinessVO businessVO) {
+        /* Step-1: 参数校验 */
+        ParamFormatUtil.formatParam(businessVO);
+
+        /* Step-2: 减少库存，调用库存信息 */
+        StockDTO stockDTO = BusinessConvert.INSTANCE.toStockDTO(businessVO);
+        this.delStock(stockDTO);
+
+        /* Step-3、创建订单 */
+        OrderDTO orderDTO = BusinessConvert.INSTANCE.toOrderDTO(businessVO);
+        this.createOrder(orderDTO);
+    }
+
+}
+```
+
+
+
+* **Stock Service：**库存服务需要减少库存信息，核心代码如下：
+
+```java
+@Service
+public class StockServiceImpl extends AbstractStockAppService implements IStockService {
+
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    public StockDTO deduct(StockDTO stockDTO) {
+        /* Step-1: 参数校验 */
+        ParamFormatUtil.formatParam(stockDTO);
+
+        /* Step-2: Stock validated */
+        Stock stock = this.validateUpdateParam(stockDTO);
+
+        /* Step-3: 减少库存 */
+        stock.setCount(stock.getCount() - stockDTO.getCount());
+        stockRepository.updateById(stock);
+
+        return StockConvert.INSTANCE.toDTO(stock);
+    }
+
+}
+
+```
+
+
+
+* **Order Service：** 订单服务主要是 创建订单 和 扣减账户余额，核心代码如下：
+
+```java
+@Service
+public class OrderAppServiceImpl extends AbstractOrderAppService implements IOrderAppService {
+
+    @Override
+    @Transactional(isolation= Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
+    public void create(final OrderDTO orderDTO) {
+        /* Step-1: 参数校验 */
+        ParamFormatUtil.formatParam(orderDTO);
+
+        /* Step-2: 减少账户余额 */
+        AccountDTO accountDTO = OrderConvert.INSTANCE.toAccountDTO(orderDTO);
+        this.delAccount(accountDTO);
+
+        /* Step-3： 创建订单 */
+        Order order = OrderConvert.INSTANCE.toOrderDO(orderDTO);
+        order.setOrderNo(UUID.randomUUID().toString());
+        this.orderRepository.save(order);
+    }
+    
+}
+```
+
+
+
+* **Account Service：**账户服务主要用于扣减账户余额，核心代码如下：
+
+```java
+@Service
+public class AccountServiceImpl implements IAccountService {
+
+    @Resource
+    private IAccountRepository accountRepository;
+
+    @Override
+    @Transactional(isolation= Isolation.REPEATABLE_READ,rollbackFor = Exception.class)
+    public void debit(AccountDTO accountDTO) {
+        Long userId = accountDTO.getUserId();
+        Account account = accountRepository.lambdaQuery().eq(Account::getUserId, userId).one();
+        if (ObjUtil.isNull(account)) {
+            throw UserOperationException.getInstance(ResultCodeEnum.SEATA_ACCOUNT_NULL_POINT_EXCEPTION);
+        }
+        BigDecimal amount = account.getAmount();
+        BigDecimal accountAmount = accountDTO.getAmount();
+        if (amount.compareTo(accountAmount) < 0) {
+            throw UserOperationException.getInstance(ResultCodeEnum.SEATA_ACCOUNT_INSUFFICIENT_BALANCE);
+        }
+        account.setAmount(amount.subtract(accountAmount));
+        accountRepository.updateById(account);
+    }
+
+}
+```
+
+
+
+### 单元测试
+
+#### 前端参数校验
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041507979.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 库存不足校验
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041510912.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 余额不足校验
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041710594.gif" alt="image" style="zoom:80%;float:left" />
+
+
+
+#### 商品编号与商品名称不对应校验
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041516824.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 服务降级
+
+* 当我们将订单服务宕机掉：这时并没有打印出错误页面，而是报的订单创建失败。
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041523294.gif" alt="image" style="zoom:100%;float:left" />
+
+
+
+#### 服务限流
+
+我们针对订单服务进行限流，如下时具体的配置信息：
+
+* Sentinel 界面配置
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041707263.png" alt="image-20240204170714224" style="zoom:80%;float:left" />
+
+* 测试结果
+
+<img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202402041708570.gif" alt="image" style="zoom:80%;float:left" />
 

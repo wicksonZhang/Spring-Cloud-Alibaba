@@ -1,6 +1,7 @@
 package cn.wickson.cloud.alibaba.seata.business.feign.fallback;
 
 import cn.wickson.cloud.alibaba.enums.ResultCodeEnum;
+import cn.wickson.cloud.alibaba.exception.TripartiteInterfaceException;
 import cn.wickson.cloud.alibaba.model.dto.OrderDTO;
 import cn.wickson.cloud.alibaba.seata.business.feign.ApiOrderFeign;
 import cn.wickson.cloud.alibaba.utils.ResultUtil;
@@ -19,7 +20,7 @@ public class OrderFallbackFactory implements FallbackFactory<ApiOrderFeign> {
         return new ApiOrderFeign() {
             @Override
             public ResultUtil create(OrderDTO orderDTO) {
-               return ResultUtil.failure(ResultCodeEnum.SEATA_ORDER_RPC_ERROR);
+               throw TripartiteInterfaceException.getInstance(ResultCodeEnum.SEATA_ORDER_RPC_ERROR.getCode(), cause.getMessage());
             }
         };
     }

@@ -31,7 +31,7 @@ public class BusinessVO implements ResultUnpacked {
     private Integer count;
 
     @NotNull(message = "商品价格不能为空")
-    @Min(value = 0L, message = "商品价格不能小于 0")
+    @Min(value = 0, message = "商品价格不能小于 0")
     @Max(value = 999999999999L, message = "商品价格不能大于 999999999999")
     private BigDecimal price;
 

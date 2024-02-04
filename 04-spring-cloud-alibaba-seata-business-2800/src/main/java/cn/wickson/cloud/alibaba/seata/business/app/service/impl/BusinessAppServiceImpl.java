@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessAppServiceImpl extends AbstractBusinessAppService implements IBusinessAppService {
 
+    /**
+     * 采购
+     *
+     * @param businessVO
+     */
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
     public void purchase(final BusinessVO businessVO) {

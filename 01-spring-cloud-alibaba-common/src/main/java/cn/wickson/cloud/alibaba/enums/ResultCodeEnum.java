@@ -53,6 +53,7 @@ public enum ResultCodeEnum {
     SEATA_STOCK_RPC_ERROR(2056, "库存扣减失败"),
     SEATA_ORDER_RPC_ERROR(2057, "订单创建失败"),
     SEATA_ACCOUNT_RPC_ERROR(2058, "账户余额扣减失败"),
+    SEATA_STOCK_NAME_DIFFERENT_EXCEPTION(2059, "扣减库存的商品名称与商品编码不一致"),
 
     /* 三方接口调用错误码：8001-8500 */
     TOKEN_ISNULL_ERROR(7001, "用户未登录，请先登录"),

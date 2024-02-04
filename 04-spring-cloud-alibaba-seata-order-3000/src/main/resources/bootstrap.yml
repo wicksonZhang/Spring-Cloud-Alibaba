@@ -34,3 +34,18 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    # ----------------------------------- Sentinel ----------------------------------------
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 配置 Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 默认端口 8719
+        port: 8719
+
+
+feign:
+  circuitbreaker:
+    # If true, an OpenFeign client will be wrapped with a Spring Cloud CircuitBreaker circuit breaker.
+    enabled: true

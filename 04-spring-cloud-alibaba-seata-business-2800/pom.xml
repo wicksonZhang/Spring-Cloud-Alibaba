@@ -37,12 +37,6 @@
             <version>1.8.0</version>
         </dependency>
 
-        <!-- Spring Cloud alibaba Sentinel 服务限流于熔断 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
-
         <!-- Spring Cloud OpenFeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
