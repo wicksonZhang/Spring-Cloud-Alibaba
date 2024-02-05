@@ -2,9 +2,9 @@
 
 ## 前言
 
-​		我们在上一个章节中已经完成了 *`Spring Cloud`* 微服务相关组件的学习，目前我们针对微服务的另一种解决方案 *`Spring Cloud Alibaba`* 进行学习，目前 `Alibaba` 微服务体系使用还是较多的。
+我们在上一个章节中已经完成了 *`Spring Cloud`* 微服务相关组件的学习，目前我们针对微服务的另一种解决方案 *`Spring Cloud Alibaba`* 进行学习，目前 `Alibaba` 微服务体系使用还是较多的。
 
-​		如下是上一章 Spring Cloud 的文档和代码
+如下是上一章 Spring Cloud 的文档和代码
 
 * Spring Cloud 代码：https://github.com/wicksonZhang/Spring-Cloud
 * Spring Cloud 文档：https://github.com/wicksonZhang/Spring-Cloud/tree/main/doc
@@ -17,7 +17,7 @@
 >
 > 中文文档：https://github.com/alibaba/spring-cloud-alibaba/blob/2022.x/README-zh.md
 
-​		*`Spring Cloud Alibaba`* 是由阿里巴巴公司与 Spring 社区合作开发的微服务框架的衍生项目。*`Spring Cloud Alibaba`* 在继承了 *`Spring Cloud`* 的优势基础上，融入了一些与阿里巴巴技术栈紧密集成的组件，以满足该生态系统中的特定需求。以下是具体的组件介绍：
+`Spring Cloud Alibaba`是由阿里巴巴公司与 Spring 社区合作开发的微服务框架的衍生项目。*`Spring Cloud Alibaba`* 在继承了 *`Spring Cloud`* 的优势基础上，融入了一些与阿里巴巴技术栈紧密集成的组件，以满足该生态系统中的特定需求。以下是具体的组件介绍：
 
 1. **Nacos：** 作为注册中心和配置中心，`Nacos` 提供了动态服务发现、配置管理和服务管理的平台。相较于 *`Spring Cloud`* 中可能需要结合 `Spring Cloud Eureka` 和 `Spring Cloud Config` 才能实现服务发现和配置管理，`Nacos` 简化了这一过程。
 2. **Sentinel：** `Sentinel` 是一款开源的流量控制和服务熔断的库，具备实时流量控制、服务熔断以及系统负载保护等功能。鉴于 `Spring Cloud Hystrix` 已停止更新，`Sentinel` 成为了替代方案，为微服务提供了稳定性和可用性的保障。
